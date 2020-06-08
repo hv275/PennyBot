@@ -21,7 +21,7 @@ class Session:
 
         # check offence has a penny
         elif offence.pennys <= 0:
-            print("Insufficient funds! Go find some pennys "
+            print("Insufficient funds! Go find some pennies "
                   "before you come back!")
         else:
             if random.random() < 0.5:
