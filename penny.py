@@ -67,7 +67,7 @@ class Session:
     def get_player(self, playerName):
         print(f"Name is '{playerName}', type {type(playerName)}")
         for player in self.players:
-            print(f"Checking '{player.name}', type {type(player.name)}")
+            print(f"  Checking '{player.name}', type {type(player.name)}")
             if playerName == player.name:
                 return player
         return None
@@ -79,6 +79,9 @@ class Session:
             playerlist.append(player.name)
         return(playerlist)
             
+    def get_balance(self, playerName):
+        player = self.get_player(playerName)
+        return player.pennys
 
 class Player:
     """ A person playing along"""
