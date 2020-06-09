@@ -40,7 +40,7 @@ async def attack(ctx, victim):
 
 @bot.command(name = 'balance', help = "See your balance")
 async def getbalance(ctx):
-    await ctx.send(sesh.get_balance(ctx.author.name))
+    await ctx.send(f"Your balance is {sesh.get_balance(ctx.author.name)}p")
 
 
 
