@@ -36,7 +36,7 @@ async def players(ctx):
 #currently fucked due to issues with Player and Session classes
 @bot.command(name = 'attack', help = "Attempt to penny a player")
 async def attack(ctx, victim):
-    await ctx.send(sesh.penny(Player(ctx.author.name),Player(victim)))
+    await ctx.send(sesh.penny(ctx.author.name,victim))
 
 
 
