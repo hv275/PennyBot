@@ -33,7 +33,7 @@ async def leave(ctx):
 @bot.command(name = 'players', help = "Show all the players currently in game")
 async def players(ctx):
     await ctx.send(sesh.playershow())
-
+#currently fucked due to issues with Player and Session classes
 @bot.command(name = 'attack', help = "Attempt to penny a player")
 async def attack(ctx, victim):
     await ctx.send(sesh.penny(Player(ctx.author.name),Player(victim)))
