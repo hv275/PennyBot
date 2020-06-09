@@ -25,21 +25,31 @@ async def on_ready():
     )
 
 @client.event
-
-#reacts to a join request to add player to a session
+#reacts to a join request to add player to a session and adds them
 async def on_message(message):
     if message.author == client.user:
         return
 
     if message.content.lower() == 'join the fun':
         await pennyjoin(message.channel)
+    elif message.content.lower() == 'sink':
+        await pennyleave(message.channel)
+
 
 async def pennyjoin(channel):
     message = await channel.fetch_message(channel.last_message_id)
-    print(f"\n{message.author} has joined the session")
-    newplayer=Player(message.author)
-    sesh.add_player(newplayer)
-    await channel.send(f"{message.author} is ready to penny")
+    newplayer=message.author
+    await channel.send(sesh.add_player(newplayer))
+    print(sesh.players)
+
+
+
+
+
+async def pennyleave(channel):
+    message = await channel.fetch_message(channel.last_message_id)
+    goneplayer=message.author
+    await channel.send(sesh.remove_player(goneplayer))
     print(sesh.players)
 
 client.run(TOKEN)

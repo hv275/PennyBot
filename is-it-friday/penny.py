@@ -44,19 +44,19 @@ class Session:
             print(f"Debug: {name} checked against {player.name}")
             if name == player.name:
                 print("You're already in the game!")
-                return
+                return "You're already in the game!"
         self.players.append(Player(name))
         print(f"{name} has joined the game!")
-        return
+        return f"{name} has joined the game!"
 
     def remove_player(self, name):
         for player in self.players:
             if name == player.name:
                 self.players.remove(player)
                 print(f"{name} has been removed")
-                return
+                return f"{name} has been removed"
         print(f"{name} could not be found")
-        return
+        return f"{name} could not be found"
 
 class Player:
     """ A person playing along"""
