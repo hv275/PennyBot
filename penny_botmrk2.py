@@ -38,7 +38,7 @@ async def players(ctx):
 async def attack(ctx, victim):
     await ctx.send(sesh.penny(ctx.author.name,victim))
 
-@bot.command(name = 'balance'), help = "See your balance")
+@bot.command(name = 'balance', help = "See your balance")
 async def getbalance(ctx):
     await ctx.send(sesh.get_balance(ctx.author.name))
 
