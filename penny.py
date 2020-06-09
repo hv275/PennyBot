@@ -5,11 +5,13 @@ class Session:
     def __init__(self):
         self.players = []
 
-    def penny(self, offence, defence):
+    def penny(self, offenceName, defenceName):
         """ A pennying event
 
         offence player is attacking the defence player"""
-
+        offence = self.get_player(offenceName)
+        defence = self.get_player(defenceName)
+        
         # check offence is registered in the game
         if offence not in self.players:
             print("Player not registered - please sign in "
@@ -62,6 +64,13 @@ class Session:
         print(f"{name} could not be found")
         return f"{name} could not be found"
 
+    def get_player(self, playerName):
+        print(f"Name is '{playerName}', type {type(playerName)}")
+        for player in self.players:
+            print(f"  Checking '{player.name}', type {type(player.name)}")
+            if playerName == player.name:
+                return player
+        return None
 
     """if we need to show who is in the game"""
     def playershow(self):
@@ -70,6 +79,9 @@ class Session:
             playerlist.append(player.name)
         return(playerlist)
             
+    def get_balance(self, playerName):
+        player = self.get_player(playerName)
+        return player.pennys
 
 class Player:
     """ A person playing along"""
