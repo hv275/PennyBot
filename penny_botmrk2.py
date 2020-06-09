@@ -24,11 +24,11 @@ async def on_ready():
 
 @bot.command(name='join', help = "Joining the game.")
 async def join(ctx):
-    await ctx.send(sesh.add_player(ctx.author.name))
+    await ctx.send(sesh.add_player(ctx.author.display_name))
 
 @bot.command(name='leave', help = "Leave the game.")
 async def leave(ctx):
-    await ctx.send(sesh.remove_player(ctx.author.name))
+    await ctx.send(sesh.remove_player(ctx.author.display_name))
 
 @bot.command(name = 'players', help = "Show all the players currently in game")
 async def players(ctx):
@@ -36,11 +36,11 @@ async def players(ctx):
 
 @bot.command(name = 'attack', help = "Attempt to penny a player. Format: 'penny attack <name of victim>'")
 async def attack(ctx, victim):
-    await ctx.send(sesh.penny(ctx.author.name,victim))
+    await ctx.send(sesh.penny(ctx.author.display_name,victim))
 
 @bot.command(name = 'balance', help = "See your balance")
 async def getbalance(ctx):
-    await ctx.send(sesh.get_balance(ctx.author.name))
+    await ctx.send(sesh.get_balance(ctx.author.display_name))
 
 
 
