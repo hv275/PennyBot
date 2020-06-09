@@ -33,7 +33,7 @@ async def leave(ctx):
 @bot.command(name = 'players', help = "Show all the players currently in game")
 async def players(ctx):
     await ctx.send(sesh.playershow())
-#currently fucked due to issues with Player and Session classes
+
 @bot.command(name = 'attack', help = "Attempt to penny a player. Format: 'penny attack <name of victim>'")
 async def attack(ctx, victim):
     await ctx.send(sesh.penny(ctx.author.name,victim))
@@ -41,6 +41,7 @@ async def attack(ctx, victim):
 @bot.command(name = 'balance', help = "See your balance")
 async def getbalance(ctx):
     await ctx.send(sesh.get_balance(ctx.author.name))
+
 
 
 

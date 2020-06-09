@@ -44,3 +44,4 @@ The Points system itself:
 					to see who they are able to penny, and another "Walk" ability could allow a
 					player to penny anyone, except that everyone is notified that you are walking,
 					giving people the chance to block. 
+
