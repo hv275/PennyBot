@@ -14,15 +14,17 @@ class Session:
         if offence not in self.players:
             print("Player not registered - please sign in "
                   "before trying to penny someone.")
+            return "error"
         # check defence is registered in the game
         elif defence not in self.players:
             print("Player not registered - make sure your "
                   "target has signed in.")
-
+            return "Player not registered"
         # check offence has a penny
         elif offence.pennys <= 0:
             print("Insufficient funds! Go find some pennies "
                   "before you come back!")
+            return "Insufficient funds! Go find some pennies before you come back!"
         else:
             if random.random() < 0.5:
                 # Attempt failed
@@ -30,9 +32,11 @@ class Session:
                       f"but missed.")
                 offence.pennys -= 1
                 defence.pennys += 1
+                return f"{offence.name} tried to penny {defence.name}, but missed."
             else:
                 # Attempt succeeded
                 print(f"{offence.name} pennied {defence.name}!")
+                return f"{offence.name} pennied {defence.name}!"
                 offence.pennys -= 1
                 offence.attacks += 1
                 defence.pennys += 1
@@ -57,6 +61,15 @@ class Session:
                 return f"{name} has been removed"
         print(f"{name} could not be found")
         return f"{name} could not be found"
+
+
+    """if we need to show who is in the game"""
+    def playershow(self):
+        playerlist = []
+        for player in self.players:
+            playerlist.append(player.name)
+        return(playerlist)
+            
 
 class Player:
     """ A person playing along"""
