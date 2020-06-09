@@ -81,7 +81,7 @@ class Session:
             
     def get_balance(self, playerName):
         player = self.get_player(playerName)
-        return player.pennys
+        return f"You have {player.pennys}p"
 
 class Player:
     """ A person playing along"""
