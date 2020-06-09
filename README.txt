@@ -36,3 +36,11 @@ The Points system itself:
 					player's "Blocking" status when they use "Check". I suggest a possible
 					level cap, but advise against caps for ATTACK and DEFENCE stats, as these
 					are effectively a player's overall points.
+
+	Seating arrangements?	Due to the usual nature of pennying, you can only really target those nearby, unless
+					you walk around. A way i think we could potentially mimick this is to restrict
+					people to pennying only those who are "seated" adjacent and diagonal to
+					themselves. An ability such as check_neighbours could allow for a player
+					to see who they are able to penny, and another "Walk" ability could allow a
+					player to penny anyone, except that everyone is notified that you are walking,
+					giving people the chance to block. 
