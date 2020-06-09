@@ -37,8 +37,8 @@ class Session:
                 return f"{offence.name} tried to penny {defence.name}, but missed."
             else:
                 # Attempt succeeded
-                print(f"{offence.name} pennied {defence.name}!")
-                return f"{offence.name} pennied {defence.name}!"
+                print(f"@{offence.name} pennied @{defence.name}!")
+                return f"@{offence.name} pennied @{defence.name}!"
                 offence.pennys -= 1
                 offence.attacks += 1
                 defence.pennys += 1
@@ -52,8 +52,8 @@ class Session:
                 print("You're already in the game!")
                 return "You're already in the game!"
         self.players.append(Player(name))
-        print(f"{name} has joined the game!")
-        return f"{name} has joined the game!"
+        print(f"@{name} has joined the game!")
+        return f"@{name} has joined the game!"
 
     def remove_player(self, name):
         for player in self.players:
