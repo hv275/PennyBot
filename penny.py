@@ -1,15 +1,16 @@
 import random
+import discord
 
 class Session:
     """ Represents a round of pennying"""
     def __init__(self):
         self.players = []
 
-    def penny(self, offenceName, defenceName, members = []):
+    def penny(self, offenceName, defenceName, vchannels):
         """ A pennying event
-        
+           
         offence player is attacking the defence player"""
-        if self.same_channel_check(members, defenceName):
+        if self.same_channel_check(offenceName, defenceName, vchannels):
             offence = self.get_player(offenceName)
             defence = self.get_player(defenceName)
         
@@ -17,7 +18,7 @@ class Session:
             if offence not in self.players:
                 print("Player not registered - please sign in "
                       "before trying to penny someone.")
-                return "error"
+                return "Player not registered"
             # check defence is registered in the game
             elif defence not in self.players:
                 print("Player not registered - make sure your "
@@ -45,7 +46,7 @@ class Session:
                     defence.pennys += 1
                     defence.defences += 1
         else:
-            return "Target too far to penny"
+            return "Target too far to penny. You have to be sat the te same table"
 
     def add_player(self, name):
         """ Add a player to the game"""
@@ -91,13 +92,16 @@ class Session:
         player.pennys += int(num)
         return(f"{player.name} was given {num} pennies. New balance: {player.pennys}")
 
-    def same_channel_check(self, members, defense):
+    def same_channel_check(self, offense, defense, vchannels):
         print("test")
-        for member in members:
-            if member.display_name == defense:
-                return True
-            else:
-                pass
+        for channel in vchannels:
+            print(channel)
+            members = channel.members
+            for i in members:
+                if i.display_name==offense:
+                    for j in members:
+                        if j.display_name == defense:
+                            return True
         return False
 
 
