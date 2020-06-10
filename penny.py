@@ -5,44 +5,47 @@ class Session:
     def __init__(self):
         self.players = []
 
-    def penny(self, offenceName, defenceName):
+    def penny(self, offenceName, defenceName, members = []):
         """ A pennying event
-
-        offence player is attacking the defence player"""
-        offence = self.get_player(offenceName)
-        defence = self.get_player(defenceName)
         
-        # check offence is registered in the game
-        if offence not in self.players:
-            print("Player not registered - please sign in "
-                  "before trying to penny someone.")
-            return "error"
-        # check defence is registered in the game
-        elif defence not in self.players:
-            print("Player not registered - make sure your "
-                  "target has signed in.")
-            return "Player not registered"
-        # check offence has a penny
-        elif offence.pennys <= 0:
-            print("Insufficient funds! Go find some pennies "
-                  "before you come back!")
-            return "Insufficient funds! Go find some pennies before you come back!"
-        else:
-            if random.random() < 0.5:
-                # Attempt failed
-                print(f"{offence.name} tried to penny {defence.name}, "
-                      f"but missed.")
-                offence.pennys -= 1
-                defence.pennys += 1
-                return f"{offence.name} tried to penny {defence.name}, but missed."
+        offence player is attacking the defence player"""
+        if self.same_channel_check(members, defenceName):
+            offence = self.get_player(offenceName)
+            defence = self.get_player(defenceName)
+        
+            # check offence is registered in the game
+            if offence not in self.players:
+                print("Player not registered - please sign in "
+                      "before trying to penny someone.")
+                return "error"
+            # check defence is registered in the game
+            elif defence not in self.players:
+                print("Player not registered - make sure your "
+                      "target has signed in.")
+                return "Player not registered"
+            # check offence has a penny
+            elif offence.pennys <= 0:
+                print("Insufficient funds! Go find some pennies "
+                      "before you come back!")
+                return "Insufficient funds! Go find some pennies before you come back!"
             else:
-                # Attempt succeeded
-                print(f"{offence.name} pennied {defence.name}!")
-                return f"{offence.name} pennied {defence.name}!"
-                offence.pennys -= 1
-                offence.attacks += 1
-                defence.pennys += 1
-                defence.defences += 1
+                if random.random() < 0.5:
+                    # Attempt failed
+                    print(f"{offence.name} tried to penny {defence.name}, "
+                          f"but missed.")
+                    offence.pennys -= 1
+                    defence.pennys += 1
+                    return f"{offence.name} tried to penny {defence.name}, but missed."
+                else:
+                    # Attempt succeeded
+                    print(f"{offence.name} pennied {defence.name}!")
+                    return f"{offence.name} pennied {defence.name}!"
+                    offence.pennys -= 1
+                    offence.attacks += 1
+                    defence.pennys += 1
+                    defence.defences += 1
+        else:
+            return "Target too far to penny"
 
     def add_player(self, name):
         """ Add a player to the game"""
@@ -87,6 +90,15 @@ class Session:
         player = self.get_player(player_name)
         player.pennys += int(num)
         return(f"{player.name} was given {num} pennies. New balance: {player.pennys}")
+
+    def same_channel_check(self, members, defense):
+        print("test")
+        for member in members:
+            if member.display_name == defense:
+                return True
+            else:
+                pass
+        return False
 
 
 

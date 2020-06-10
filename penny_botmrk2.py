@@ -40,11 +40,17 @@ async def players(ctx):
 @bot.command(name = 'attack', help = "Attempt to penny a player. Format: 'penny attack <name of victim>'")
 async def attack(ctx, victim):
     #this is a highly retarded way to go about sending messages to channels but it will have to do
-    response = sesh.penny(ctx.author.display_name,victim)
-    #change id to the appropriate channel
-    channel = bot.get_channel(719657679601270905)
-    await ctx.send(response)
-    await channel.send(response)
+    inchannel =[]
+    if ctx.author.voice == None:
+        await ctx.send("Join a voice channel to participate")
+    else:
+        inchannel.extend(ctx.author.voice.channel.members)
+        print(inchannel)
+        response = sesh.penny(ctx.author.display_name,victim, inchannel)
+        #change id to the appropriate channel
+        #channel = bot.get_channel(719657679601270905)
+        await ctx.send(response)
+        #await channel.send(response)
 
 @bot.command(name = 'balance', help = "See your balance")
 async def getbalance(ctx):

@@ -45,3 +45,9 @@ The Points system itself:
 					player to penny anyone, except that everyone is notified that you are walking,
 					giving people the chance to block. 
 
+
+TODO:
+	Gleb: see if you can only penny people in the voice channel
+
+	Rory: hold glass and mentions
+
