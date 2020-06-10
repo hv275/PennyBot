@@ -1,5 +1,6 @@
 import random
 import discord
+import threading
 
 class Session:
     """ Represents a round of pennying"""
@@ -47,6 +48,27 @@ class Session:
                     defence.defences += 1
         else:
             return "Target too far to penny. You have to be sat the te same table"
+
+    def block(self, playerName):
+        player = self.get_player(playerName)
+        if player.on_cooldown is True:
+            return "That ability is on cooldown - you'll need to wait"
+        else:
+            cooldown_timer = True
+            blocking = True
+            print("  Setting up timers")
+            t1 = threading.Timer(30, reset_block(player))
+            t2 = threading.Timer(120, reset_cooldown(player))
+            print("  Starting timers")
+            t1.start()
+            t2.start()
+            return "Blocking glass for 30 seconds"
+            
+    def reset_cooldown(self, player):
+        player.on_cooldown = False
+
+    def reset_block(self, player):
+        player.block = False
 
     def add_player(self, name):
         """ Add a player to the game"""
@@ -115,3 +137,5 @@ class Player:
         self.pennys = 10  # All players start with 10 pennies
         self.attacks = 0  # Record of all attempts at pennying
         self.defences = 0  # Record of all attempts on this player
+        self.blocking = False
+        self.on_cooldown = False

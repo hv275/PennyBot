@@ -59,6 +59,10 @@ async def getbalance(ctx):
 async def  cashinjection(ctx,name,num):
     await ctx.send(sesh.cashinjection(name,num))
 
+@bot.command(name = 'block', help = "Hold your glass for 30 secs")
+async def hold_glass(ctx):
+    await ctx.send(sesh.block(ctx.author.display_name))
+
 #output in case of a check failure
 @bot.event
 async def on_command_error(ctx, error):
