@@ -14,9 +14,10 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 CHANNEL = os.getenv('DISCORD_CHANNEL')
 sesh = Session()
-client = discord.Client()
 #working with bot class now
 bot = commands.Bot(command_prefix='penny ')
+client = discord.Client()
+
 
 @bot.event
 async def on_ready():
@@ -36,11 +37,25 @@ async def players(ctx):
 
 @bot.command(name = 'attack', help = "Attempt to penny a player. Format: 'penny attack <name of victim>'")
 async def attack(ctx, victim):
-    await ctx.send(sesh.penny(ctx.author.display_name,victim))
+    await channel.send(sesh.penny(ctx.author.display_name,victim))
 
 @bot.command(name = 'balance', help = "See your balance")
 async def getbalance(ctx):
     await ctx.send(sesh.get_balance(ctx.author.display_name))
+
+#cash injection that checks that the user has an admin role
+@bot.command(name = 'cashinjection', help = "dev only")
+@commands.has_role('dev')
+async def  cashinjection(ctx,name,num):
+    await ctx.send(sesh.cashinjection(name,num))
+
+#output in case of a check failure
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.errors.CheckFailure):
+        await ctx.send('You do not have the correct role for this command.')
+
+
 
 
 

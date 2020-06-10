@@ -83,6 +83,15 @@ class Session:
         player = self.get_player(playerName)
         return f"You have {player.pennys}p"
 
+    def cashinjection(self, player_name, num):
+        player = self.get_player(player_name)
+        player.pennys += int(num)
+        return(f"{player.name} was given {num} pennies. New balance: {player.pennys}")
+
+
+
+
+
 class Player:
     """ A person playing along"""
     def __init__(self, name):
