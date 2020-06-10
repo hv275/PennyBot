@@ -16,16 +16,18 @@ CHANNEL = os.getenv('DISCORD_CHANNEL')
 sesh = Session()
 #working with bot class now
 bot = commands.Bot(command_prefix='penny ')
-client = discord.Client()
 
 
 @bot.event
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
 
+
 @bot.command(name='join', help = "Joining the game.")
 async def join(ctx):
     await ctx.send(sesh.add_player(ctx.author.display_name))
+    
+
 
 @bot.command(name='leave', help = "Leave the game.")
 async def leave(ctx):
@@ -37,7 +39,12 @@ async def players(ctx):
 
 @bot.command(name = 'attack', help = "Attempt to penny a player. Format: 'penny attack <name of victim>'")
 async def attack(ctx, victim):
-    await channel.send(sesh.penny(ctx.author.display_name,victim))
+    #this is a highly retarded way to go about sending messages to channels but it will have to do
+    response = sesh.penny(ctx.author.display_name,victim)
+    #change id to the appropriate channel
+    channel = bot.get_channel(719657679601270905)
+    await ctx.send(response)
+    await channel.send(response)
 
 @bot.command(name = 'balance', help = "See your balance")
 async def getbalance(ctx):
