@@ -33,6 +33,7 @@ async def join(ctx):
 async def leave(ctx):
     await ctx.send(sesh.remove_player(ctx.author.display_name))
 
+
 @bot.command(name = 'players', help = "Show all the players currently in game")
 async def players(ctx):
     await ctx.send(sesh.playershow())
@@ -44,6 +45,23 @@ async def attack(ctx, victim):
     vchannels =  guild.voice_channels
     print(vchannels)
     response = sesh.penny(ctx.author.display_name, victim, vchannels)
+    #change id to the appropriate channel
+    channel = bot.get_channel(719657679601270905)
+    #replies to the author and sends message to the assigned channel if needed
+    await ctx.send(response)
+    if ctx.channel == channel:
+        pass
+    else:
+        await channel.send(response)
+
+
+@bot.command(name = 'snipe', help = "Attempt to snipe a player. Format: 'penny snipe <name of victim>'")
+async def attack(ctx, victim):
+    #this is a highly retarded way to go about sending messages to channels but it will have to do
+    guild = discord.utils.get(bot.guilds, name=GUILD)
+    vchannels =  guild.voice_channels
+    print(vchannels)
+    response = sesh.snipe(ctx.author.display_name, victim, vchannels)
     #change id to the appropriate channel
     channel = bot.get_channel(719657679601270905)
     #replies to the author and sends message to the assigned channel if needed

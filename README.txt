@@ -37,7 +37,7 @@ The Points system itself:
 					level cap, but advise against caps for ATTACK and DEFENCE stats, as these
 					are effectively a player's overall points.
 
-	Seating arrangements?	Due to the usual nature of pennying, you can only really target those nearby, unless
+	Seating arrangements?(Done)	Due to the usual nature of pennying, you can only really target those nearby, unless
 					you walk around. A way i think we could potentially mimick this is to restrict
 					people to pennying only those who are "seated" adjacent and diagonal to
 					themselves. An ability such as check_neighbours could allow for a player
@@ -47,7 +47,7 @@ The Points system itself:
 
 
 TODO:
-	Gleb: see if you can only penny people in the voice channel
+	Gleb: start with attack defence stats
 
-	Rory: hold glass and mentions
+	Rory: hold glass
 

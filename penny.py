@@ -1,6 +1,7 @@
 import random
 import discord
 import threading
+import numpy as np
 
 class Session:
     """ Represents a round of pennying"""
@@ -9,11 +10,12 @@ class Session:
 
     def penny(self, offenceName, defenceName, vchannels):
         """ A pennying event
-           
+        
         offence player is attacking the defence player"""
+        offence = self.get_player(offenceName)
+        defence = self.get_player(defenceName)
+
         if self.same_channel_check(offenceName, defenceName, vchannels):
-            offence = self.get_player(offenceName)
-            defence = self.get_player(defenceName)
         
             # check offence is registered in the game
             if offence not in self.players:
@@ -33,21 +35,82 @@ class Session:
             else:
                 if random.random() < 0.5:
                     # Attempt failed
-                    print(f"{offence.name} tried to penny {defence.name}, "
-                          f"but missed.")
                     offence.pennys -= 1
                     defence.pennys += 1
+                    defence.defences += 1
+                    defence.defencestat += offence.prob
+                    print(offence)
+                    print(defence)
+                    print(f"{offence.name} tried to penny {defence.name}, but missed.")
                     return f"{offence.name} tried to penny {defence.name}, but missed."
                 else:
                     # Attempt succeeded
-                    print(f"{offence.name} pennied {defence.name}!")
-                    return f"{offence.name} pennied {defence.name}!"
                     offence.pennys -= 1
                     offence.attacks += 1
                     defence.pennys += 1
-                    defence.defences += 1
+                    offence.attackstat += 1.0-offence.prob
+                    defence.defencestat += offence.prob/0.3 #review the mechanics as very basic atm, we want to compare attack/defense ideally
+                    print(offence)
+                    print(defence)
+                    print(f"{offence.name} pennied {defence.name}!")
+                    return f"{offence.name} pennied {defence.name}!"
         else:
-            return "Target too far to penny. You have to be sat the the same table"
+            print(f"{offence.name} tried to penny {defence.name}, but target is sat too far. You have to be sat the the same table")
+            return f"{offence.name} tried to penny {defence.name}, but target is sat too far. You have to be sat the the same table"
+
+
+    def snipe(self, offenceName, defenceName, vchannels):
+        """ A sniping event
+        
+        offence player is attacking the defence player"""
+        offence = self.get_player(offenceName)
+        defence = self.get_player(defenceName)
+
+        if self.same_channel_check(offenceName, defenceName, vchannels):
+        
+            # check offence is registered in the game
+            if offence not in self.players:
+                print("Player not registered - please sign in "
+                      "before trying to penny someone.")
+                return "Player not registered"
+            # check defence is registered in the game
+            elif defence not in self.players:
+                print("Player not registered - make sure your "
+                      "target has signed in.")
+                return "Player not registered"
+            # check offence has a penny
+            elif offence.pennys <= 0:
+                print("Insufficient funds! Go find some pennies "
+                      "before you come back!")
+                return "Insufficient funds! Go find some pennies before you come back!"
+            else:
+                if random.random() < 0.2:
+                    # Attempt failed
+                    print(f"{offence.name} tried to snipe {defence.name}, "
+                          f"but missed.")
+                    offence.pennys -= 1
+                    defence.pennys += 1
+                    defence.defences += 1
+                    defence.defencestat += offence.prob
+                    print(offence)
+                    print(defence)
+                    return f"{offence.name} tried to snipe {defence.name}, but missed."
+                else:
+                    # Attempt succeeded
+                    offence.pennys -= 1
+                    offence.attacks += 1
+                    defence.pennys += 1
+                    offence.attackstat += 1.0-offence.prob
+                    defence.defencestat += offence.prob/0.3 #the way this stuff will affect the snipe ability
+                    print(offence)
+                    print(defence)
+                    print(f"{offence.name} sniped {defence.name}!")
+                    return f"{offence.name} sniped {defence.name}!"
+        else:
+            print(f"{offence.name} tried to snipe {defence.name}, but target is sat too far. You have to be sat the the same table")
+            return f"{offence.name} tried to snipe {defence.name}, but target is sat too far. You have to be sat the the same table"
+
+
 
     def block(self, playerName):
         player = self.get_player(playerName)
@@ -134,8 +197,23 @@ class Player:
     """ A person playing along"""
     def __init__(self, name):
         self.name = name
+        self.attackstat = 1.0 # attack level
+        self.defencestat = 1.0 #defense level
+        self.prob = 0.5 #should really be linked to Session and worked out by using a formular with attack and defence
+        self.snipesuccess = 0.1 #success for a successful snipe, need formulae to scale
+        self.level = 1 + np.floor(np.log2(self.attackstat + self.defencestat)) #formula for level to be reviwed
         self.pennys = 10  # All players start with 10 pennies
         self.attacks = 0  # Record of all attempts at pennying
         self.defences = 0  # Record of all attempts on this player
         self.blocking = False
         self.on_cooldown = False
+    #for easier printing of function
+    def __repr__(self):
+        return f"""
+        Name: {self.name}
+        Attackstat: {str(self.attackstat)}
+        Defencestat: {str(self.defencestat)}
+        Level: {str(self.level)}
+        Attacks: {str(self.attacks)}
+        Defences: {str(self.defences)}"""
+        
