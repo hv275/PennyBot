@@ -27,6 +27,7 @@ class Session:
                 print("Player not registered - make sure your "
                       "target has signed in.")
                 return "Player not registered"
+
             # check offence has a penny
             elif offence.pennys <= 0:
                 print("Insufficient funds! Go find some pennies "
@@ -48,12 +49,19 @@ class Session:
                     offence.pennys -= 1
                     offence.attacks += 1
                     defence.pennys += 1
-                    offence.attackstat += 1.0-offence.prob
-                    defence.defencestat += offence.prob/0.3 #review the mechanics as very basic atm, we want to compare attack/defense ideally
-                    print(offence)
-                    print(defence)
-                    print(f"{offence.name} pennied {defence.name}!")
-                    return f"{offence.name} pennied {defence.name}!"
+                    if defence.blocking is True:
+                        defence.defencestat += 1.5*offence.prob
+                        print(f"{offence.name} tried to penny {defence.name}, but {defence.name}"
+                              f" was holding their glass!")
+                        return (f"{offence.name} tried to penny {defence.name}, but {defence.name}"
+                              f" was holding their glass!")
+                    else:
+                        offence.attackstat += 1.0-offence.prob
+                        defence.defencestat += offence.prob/3.0 #review the mechanics as very basic atm, we want to compare attack/defense ideally
+                        print(offence)
+                        print(defence)
+                        print(f"{offence.name} pennied {defence.name}!")
+                        return f"{offence.name} pennied {defence.name}!"
         else:
             print(f"{offence.name} tried to penny {defence.name}, but target is sat too far. You have to be sat the the same table")
             return f"{offence.name} tried to penny {defence.name}, but target is sat too far. You have to be sat the the same table"
@@ -78,6 +86,7 @@ class Session:
                 print("Player not registered - make sure your "
                       "target has signed in.")
                 return "Player not registered"
+
             # check offence has a penny
             elif offence.pennys <= 0:
                 print("Insufficient funds! Go find some pennies "
@@ -113,25 +122,10 @@ class Session:
 
 
     def block(self, playerName):
+        print(" Session.block() called")
         player = self.get_player(playerName)
-        if player.on_cooldown is True:
-            return "That ability is on cooldown - you'll need to wait"
-        else:
-            cooldown_timer = True
-            blocking = True
-            print("  Setting up timers")
-            t1 = threading.Timer(30, reset_block(player))
-            t2 = threading.Timer(120, reset_cooldown(player))
-            print("  Starting timers")
-            t1.start()
-            t2.start()
-            return "Blocking glass for 30 seconds"
+        player.block()
             
-    def reset_cooldown(self, player):
-        player.on_cooldown = False
-
-    def reset_block(self, player):
-        player.block = False
 
     def add_player(self, name):
         """ Add a player to the game"""
@@ -158,7 +152,9 @@ class Session:
         for player in self.players:
             print(f"  Checking '{player.name}', type {type(player.name)}")
             if playerName == player.name:
+                print("Player found")
                 return player
+        print("Player not found")
         return None
 
     """if we need to show who is in the game"""
@@ -207,6 +203,37 @@ class Player:
         self.defences = 0  # Record of all attempts on this player
         self.blocking = False
         self.on_cooldown = False
+        print("Setting up timers")
+        self.t1 = threading.Timer(5, self.reset_block)
+        self.t2 = threading.Timer(10, self.reset_cooldown)
+        print("  Timers set")
+
+    def block(self):
+        print(" Player.block() called")
+        if self.on_cooldown is True:
+            return "That ability is on cooldown - you'll need to wait"
+        else:
+            self.on_cooldown = True
+            self.blocking = True
+            print("Starting timers")
+            print(f"  Block_pre = {self.blocking}")
+            self.t1.start()
+            print("  t1 started")
+            print(f"  Cooldown_pre = {self.on_cooldown}")
+            self.t2.start()
+            print("  t2 started")
+            return "Blocking glass for 30 seconds"
+
+    def reset_block(self):
+        self.blocking = False
+        print(f"Blocking_post = {self.blocking}")
+        self.t1 = threading.Timer(5, self.reset_block)
+
+    def reset_cooldown(self):
+        self.on_cooldown = False
+        print(f"Cooldown_post = {self.on_cooldown}")
+        self.t2 = threading.Timer(10, self.reset_cooldown)
+
     #for easier printing of function
     def __repr__(self):
         return f"""
