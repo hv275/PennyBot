@@ -201,7 +201,7 @@ class Player:
         self.defencestat = 1.0 #defense level
         self.prob = 0.5 #should really be linked to Session and worked out by using a formular with attack and defence
         self.snipesuccess = 0.1 #success for a successful snipe, need formulae to scale
-        self.level = 1 + np.floor(np.log2(self.attackstat + self.defencestat)) #formula for level to be reviwed
+        self.level = 1 + np.floor(np.log2(self.attackstat + self.defencestat)) #formula for level (to be reviewed) (Note:floor rounds down)
         self.pennys = 10  # All players start with 10 pennies
         self.attacks = 0  # Record of all attempts at pennying
         self.defences = 0  # Record of all attempts on this player
