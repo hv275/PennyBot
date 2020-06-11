@@ -47,7 +47,7 @@ class Session:
                     defence.pennys += 1
                     defence.defences += 1
         else:
-            return "Target too far to penny. You have to be sat the te same table"
+            return "Target too far to penny. You have to be sat the the same table"
 
     def block(self, playerName):
         player = self.get_player(playerName)

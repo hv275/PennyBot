@@ -45,24 +45,29 @@ async def attack(ctx, victim):
     print(vchannels)
     response = sesh.penny(ctx.author.display_name, victim, vchannels)
     #change id to the appropriate channel
-    channel = bot.get_channel(719990123051352155)
+    channel = bot.get_channel(719657679601270905)
+    #replies to the author and sends message to the assigned channel if needed
     await ctx.send(response)
-    await channel.send(response)
+    if ctx.channel == channel:
+        pass
+    else:
+        await channel.send(response)
+    
 
 @bot.command(name = 'balance', help = "See your balance")
 async def getbalance(ctx):
     await ctx.send(sesh.get_balance(ctx.author.display_name))
+
+@bot.command(name = 'block', help = "Hold your glass for 30 secs")
+async def hold_glass(ctx):
+    await ctx.send(sesh.block(ctx.author.display_name))
 
 #cash injection that checks that the user has an admin role
 @bot.command(name = 'cashinjection', help = "dev only")
 @commands.has_role('dev')
 async def  cashinjection(ctx,name,num):
     await ctx.send(sesh.cashinjection(name,num))
-
-@bot.command(name = 'block', help = "Hold your glass for 30 secs")
-async def hold_glass(ctx):
-    await ctx.send(sesh.block(ctx.author.display_name))
-
+#please keep these two together
 #output in case of a check failure
 @bot.event
 async def on_command_error(ctx, error):
