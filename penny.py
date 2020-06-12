@@ -33,6 +33,10 @@ class Session:
                 print("Insufficient funds! Go find some pennies "
                       "before you come back!")
                 return "Insufficient funds! Go find some pennies before you come back!"
+            elif offence.p_cooldown is True:
+                print("Hold on a bit! You're going too quick!")
+                return "Hold on a bit! You're going too quick!"
+
             else:
                 offence.blocking = False
                 prob = self.probability((offence.attackstat - defence.defencestat))
@@ -99,15 +103,19 @@ class Session:
             elif offence.level < 3:
                 print("Level not high enough. Available from level 3 and above")
                 return "Level not high enough. Available from level 3 and above"
+            elif offence.p_cooldown is True:
+                print("Hold on a bit! You're going too quick!")
+                return "Hold on a bit! You're going too quick!"
             else:
+                offence.blocking = False
                 if random.random() > offence.snipesuccess:
+                    offence.p_wait()
                     # Attempt failed
                     print(f"{offence.name} tried to snipe {defence.name}, "
                           f"but missed.")
                     offence.pennys -= 1
                     defence.pennys += 1
                     defence.defences += 1
-                    defence.defencestat += offence.snipesuccess
                     print(offence)
                     print(defence)
                     return f"{offence.name} tried to snipe {defence.name}, but missed."
@@ -116,8 +124,7 @@ class Session:
                     offence.pennys -= 1
                     offence.attacks += 1
                     defence.pennys += 1
-                    offence.attackstat += 1.0-offence.snipesuccess
-                    defence.defencestat += offence.snipesuccess/3#the way this stuff will affect the snipe ability
+                    offence.attackstat += 3*(1.0-offence.snipesuccess)
                     print(offence)
                     print(defence)
                     print(f"{offence.name} sniped {defence.name}!")
@@ -166,8 +173,9 @@ class Session:
     """if we need to show who is in the game"""
     def playershow(self):
         playerlist = []
+        scorelist = []
         for player in self.players:
-            playerlist.append(player.name)
+            playerlist.append(f"{player.name}: {player.attackstat + player.attackstat}")
         return(playerlist)
             
     def get_balance(self, playerName):
@@ -212,7 +220,7 @@ class Session:
         #b is probabolity for when attack and defense are eqaul
         #a affects how quickly the probability grows with disparity
         b=0.55
-        a=0.3
+        a=0.2
         return (b*np.exp(a*x))/(b*np.exp(a*x)-b+1)
 
     def check(self, offenceName, defenceName):
@@ -252,7 +260,7 @@ class Player:
         print("Setting up timers")
         self.t1 = threading.Timer(30, self.reset_block)
         self.t2 = threading.Timer(120, self.reset_cooldown)
-        self.t3 = threading.Timer(10, self.reset_block)
+        self.t3 = threading.Timer(10, self.reset_penny)
         print("  Timers set")
 
     #storing level as a property so it auto updated, usage same as a normal property
@@ -289,10 +297,10 @@ class Player:
         self.p_cooldown = True
         self.t3.start()
 
-    def reset_pennyself):
+    def reset_penny(self):
         self.p_cooldown = False
         print(f"P_post = {self.p_cooldown}")
-        self.t3 = threading.Timer(10, self.reset_block)
+        self.t3 = threading.Timer(10, self.reset_penny)
 
     def reset_block(self):
         self.blocking = False
