@@ -15,7 +15,7 @@ GUILD = os.getenv('DISCORD_GUILD')
 CHANNEL = os.getenv('DISCORD_CHANNEL')
 sesh = Session()
 #working with bot class now
-bot = commands.Bot(command_prefix='penny ')
+bot = commands.Bot(command_prefix='p- ')
 
 
 @bot.event
@@ -38,7 +38,7 @@ async def leave(ctx):
 async def players(ctx):
     await ctx.send(sesh.playershow())
 
-@bot.command(name = 'attack', help = "Attempt to penny a player. Format: 'penny attack <name of victim>'")
+@bot.command(name = 'penny', help = "Attempt to penny a player. Format: 'penny attack <name of victim>'")
 async def attack(ctx, victim):
     #this is a highly retarded way to go about sending messages to channels but it will have to do
     guild = discord.utils.get(bot.guilds, name=GUILD)
@@ -91,7 +91,7 @@ async def give(ctx, target, amount):
 
 #cash injection that checks that the user has an admin role, also hidden from help menu
 @bot.command(name = 'cashinjection', help = "dev only", hidden = True)
-@commands.has_role('dev')
+@commands.has_role('Developer')
 async def  cashinjection(ctx,name,num):
     await ctx.send(sesh.cashinjection(name,num))
 #please keep these two together

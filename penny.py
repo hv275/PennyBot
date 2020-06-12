@@ -34,9 +34,11 @@ class Session:
                       "before you come back!")
                 return "Insufficient funds! Go find some pennies before you come back!"
             else:
+                offence.blocking = False
                 prob = self.probability((offence.attackstat - defence.defencestat))
                 if random.random() < (1-prob): #all of our probabilities were the wrong way round
                     # Attempt failed
+                    offence.p_wait()
                     offence.pennys -= 1
                     defence.pennys += 1
                     defence.defences += 1
@@ -51,6 +53,7 @@ class Session:
                     offence.attacks += 1
                     defence.pennys += 1
                     if defence.blocking is True:
+                        offence.p_wait()
                         defence.defencestat += 1.5*prob
                         print(f"{offence.name} tried to penny {defence.name}, but {defence.name}"
                               f" was holding their glass!")
@@ -245,9 +248,11 @@ class Player:
         self.defences = 0  # Record of all attempts on this player
         self.blocking = False
         self.on_cooldown = False
+        self.p_cooldown = False
         print("Setting up timers")
-        self.t1 = threading.Timer(5, self.reset_block)
-        self.t2 = threading.Timer(10, self.reset_cooldown)
+        self.t1 = threading.Timer(30, self.reset_block)
+        self.t2 = threading.Timer(120, self.reset_cooldown)
+        self.t3 = threading.Timer(10, self.reset_block)
         print("  Timers set")
 
     #storing level as a property so it auto updated, usage same as a normal property
@@ -279,15 +284,25 @@ class Player:
             print("  t2 started")
             return "Blocking glass for 30 seconds"
 
+    def p_wait(self):
+        print(f"{self.name} on Penny Cooldown")
+        self.p_cooldown = True
+        self.t3.start()
+
+    def reset_pennyself):
+        self.p_cooldown = False
+        print(f"P_post = {self.p_cooldown}")
+        self.t3 = threading.Timer(10, self.reset_block)
+
     def reset_block(self):
         self.blocking = False
         print(f"Blocking_post = {self.blocking}")
-        self.t1 = threading.Timer(5, self.reset_block)
+        self.t1 = threading.Timer(30, self.reset_block)
 
     def reset_cooldown(self):
         self.on_cooldown = False
         print(f"Cooldown_post = {self.on_cooldown}")
-        self.t2 = threading.Timer(10, self.reset_cooldown)
+        self.t2 = threading.Timer(120, self.reset_cooldown)
 
     #for easier printing of function
     def __repr__(self):
