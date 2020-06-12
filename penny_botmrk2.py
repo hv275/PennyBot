@@ -46,7 +46,7 @@ async def attack(ctx, victim):
     print(vchannels)
     response = sesh.penny(ctx.author.display_name, victim, vchannels)
     #change id to the appropriate channel
-    channel = bot.get_channel(719657679601270905)
+    channel = bot.get_channel(719990123051352155)
     #replies to the author and sends message to the assigned channel if needed
     await ctx.send(response)
     if ctx.channel == channel:
@@ -63,7 +63,7 @@ async def snipe(ctx, victim):
     print(vchannels)
     response = sesh.snipe(ctx.author.display_name, victim, vchannels)
     #change id to the appropriate channel
-    channel = bot.get_channel(719657679601270905)
+    channel = bot.get_channel(719990123051352155)
     #replies to the author and sends message to the assigned channel if needed
     await ctx.send(response)
     if ctx.channel == channel:
