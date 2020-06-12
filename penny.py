@@ -2,12 +2,12 @@ import random
 import discord
 import threading
 import numpy as np
+import math
 
 class Session:
     """ Represents a round of pennying"""
     def __init__(self):
         self.players = []
-
     def penny(self, offenceName, defenceName, vchannels):
         """ A pennying event
         
@@ -34,12 +34,13 @@ class Session:
                       "before you come back!")
                 return "Insufficient funds! Go find some pennies before you come back!"
             else:
-                if random.random() < 0.5:
+                prob = self.probability((offence.attackstat - defence.defencestat))
+                if random.random() < (1-prob): #all of our probabilities were the wrong way round
                     # Attempt failed
                     offence.pennys -= 1
                     defence.pennys += 1
                     defence.defences += 1
-                    defence.defencestat += offence.prob
+                    defence.defencestat += prob
                     print(offence)
                     print(defence)
                     print(f"{offence.name} tried to penny {defence.name}, but missed.")
@@ -50,14 +51,14 @@ class Session:
                     offence.attacks += 1
                     defence.pennys += 1
                     if defence.blocking is True:
-                        defence.defencestat += 1.5*offence.prob
+                        defence.defencestat += 1.5*prob
                         print(f"{offence.name} tried to penny {defence.name}, but {defence.name}"
                               f" was holding their glass!")
                         return (f"{offence.name} tried to penny {defence.name}, but {defence.name}"
                               f" was holding their glass!")
                     else:
-                        offence.attackstat += 1.0-offence.prob
-                        defence.defencestat += offence.prob/3.0 #review the mechanics as very basic atm, we want to compare attack/defense ideally
+                        offence.attackstat += 1.0-prob
+                        defence.defencestat += prob/3.0 
                         print(offence)
                         print(defence)
                         print(f"{offence.name} pennied {defence.name}!")
@@ -92,15 +93,18 @@ class Session:
                 print("Insufficient funds! Go find some pennies "
                       "before you come back!")
                 return "Insufficient funds! Go find some pennies before you come back!"
+            elif offence.level < 3:
+                print("Level not high enough. Available from level 3 and above")
+                return "Level not high enough. Available from level 3 and above"
             else:
-                if random.random() < 0.2:
+                if random.random() > offence.snipesuccess:
                     # Attempt failed
                     print(f"{offence.name} tried to snipe {defence.name}, "
                           f"but missed.")
                     offence.pennys -= 1
                     defence.pennys += 1
                     defence.defences += 1
-                    defence.defencestat += offence.prob
+                    defence.defencestat += offence.snipesuccess
                     print(offence)
                     print(defence)
                     return f"{offence.name} tried to snipe {defence.name}, but missed."
@@ -109,8 +113,8 @@ class Session:
                     offence.pennys -= 1
                     offence.attacks += 1
                     defence.pennys += 1
-                    offence.attackstat += 1.0-offence.prob
-                    defence.defencestat += offence.prob/0.3 #the way this stuff will affect the snipe ability
+                    offence.attackstat += 1.0-offence.snipesuccess
+                    defence.defencestat += offence.snipesuccess/3#the way this stuff will affect the snipe ability
                     print(offence)
                     print(defence)
                     print(f"{offence.name} sniped {defence.name}!")
@@ -118,7 +122,6 @@ class Session:
         else:
             print(f"{offence.name} tried to snipe {defence.name}, but target is sat too far. You have to be sat the the same table")
             return f"{offence.name} tried to snipe {defence.name}, but target is sat too far. You have to be sat the the same table"
-
 
 
     def block(self, playerName):
@@ -185,6 +188,14 @@ class Session:
                             return True
         return False
 
+    def probability(self, x):
+        #adjuct constansts for scaling, current set up seems reasonable
+        #b is probabolity for when attack and defense are eqaul
+        #a affects how quickly the probability grows with disparity
+        b=0.55
+        a=0.3
+        return (b*np.exp(a*x))/(b*np.exp(a*x)-b+1)
+
 
 
 
@@ -195,9 +206,6 @@ class Player:
         self.name = name
         self.attackstat = 1.0 # attack level
         self.defencestat = 1.0 #defense level
-        self.prob = 0.5 #should really be linked to Session and worked out by using a formular with attack and defence
-        self.snipesuccess = 0.1 #success for a successful snipe, need formulae to scale
-        self.level = 1 + np.floor(np.log2(self.attackstat + self.defencestat)) #formula for level (to be reviewed) (Note:floor rounds down)
         self.pennys = 10  # All players start with 10 pennies
         self.attacks = 0  # Record of all attempts at pennying
         self.defences = 0  # Record of all attempts on this player
@@ -207,6 +215,19 @@ class Player:
         self.t1 = threading.Timer(5, self.reset_block)
         self.t2 = threading.Timer(10, self.reset_cooldown)
         print("  Timers set")
+
+    #storing level as a property so it auto updated
+    @property
+    def level(self):
+        return np.floor(1 + math.log((self.attackstat + self.defencestat),2)) #formula for level using log base 1.5 (Note:floor rounds down)
+
+    @property
+    def snipesuccess(self):
+        #test to optimise
+        b=0.2
+        a=0.2
+        return (b*np.exp(a*self.attackstat))/(b*np.exp(a*self.attackstat)-b+1)
+
 
     def block(self):
         print(" Player.block() called")

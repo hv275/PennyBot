@@ -47,7 +47,7 @@ The Points system itself:
 
 
 TODO:
-	Gleb: start with attack defence stats
+	Gleb: player check and give pennies, scipy cdf, fix help menu
 
 	Rory: hold glass
 
