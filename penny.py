@@ -221,7 +221,7 @@ class Session:
             return f"""
             Here is information on the target
             Name: {defence.name}
-            Probability of penny success: {str(prob)}
+            Probability of penny success: {str(round(prob,2))}
             Probability of snipe success: {str(round(offence.snipesuccess,2))}
             Level: {str(defence.level)}
             Attacks: {str(defence.attacks)}

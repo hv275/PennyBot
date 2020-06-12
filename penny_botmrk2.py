@@ -89,8 +89,8 @@ async def give(ctx, target, amount):
     await ctx.send(sesh.give(ctx.author.display_name, target, amount))
 
 
-#cash injection that checks that the user has an admin role
-@bot.command(name = 'cashinjection', help = "dev only")
+#cash injection that checks that the user has an admin role, also hidden from help menu
+@bot.command(name = 'cashinjection', help = "dev only", hidden = True)
 @commands.has_role('dev')
 async def  cashinjection(ctx,name,num):
     await ctx.send(sesh.cashinjection(name,num))
