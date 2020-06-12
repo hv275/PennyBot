@@ -47,7 +47,7 @@ The Points system itself:
 
 
 TODO:
-	Gleb: fix help menu
+	Gleb: kick, some more dev options, make players look nice, show attack and defence
 
-	Rory: hold glass
+	Rory: vote system, leaderboard, 
 
