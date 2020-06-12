@@ -232,8 +232,8 @@ class Session:
             return f"""
             Here is information on the target
             Name: {defence.name}
-            Probability of penny success: {str(round(prob,2))}
-            Probability of snipe success: {str(round(offence.snipesuccess,2))}
+            Attackstat: {str(self.attackstat)}
+            Defencestat: {str(self.defencestat)}
             Level: {str(defence.level)}
             Attacks: {str(defence.attacks)}
             Defences: {str(defence.defences)}"""
