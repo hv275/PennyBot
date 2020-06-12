@@ -176,6 +176,22 @@ class Session:
         player.pennys += int(num)
         return(f"{player.name} was given {num} pennies. New balance: {player.pennys}")
 
+
+    def give(self,giver,reciever, amount):
+        benefactor = self.get_player(giver)
+        urchin = self.get_player(reciever)
+        amount = int(amount)
+        if benefactor != None and urchin != None:
+            if benefactor.pennys >= amount:
+                benefactor.pennys -= int(amount)
+                urchin.pennys += amount
+                return(f"{benefactor.name} has kindly given {urchin.name} {str(amount)}p.")
+            else:
+                return "You do nat have enough pennies for this. Find some more"
+        else:
+            return "Player not found, check that the name is correct and that they are in the game"
+
+
     def same_channel_check(self, offense, defense, vchannels):
         print("test")
         for channel in vchannels:
@@ -195,6 +211,24 @@ class Session:
         b=0.55
         a=0.3
         return (b*np.exp(a*x))/(b*np.exp(a*x)-b+1)
+
+    def check(self, offenceName, defenceName):
+        #checks the player stats and prints them out
+        offence = self.get_player(offenceName)
+        defence = self.get_player(defenceName)
+        if offence != None and defence != None:
+            prob = self.probability(offence.attackstat - defence.defencestat)
+            return f"""
+            Here is information on the target
+            Name: {defence.name}
+            Probability of penny success: {str(prob)}
+            Probability of snipe success: {str(round(offence.snipesuccess,2))}
+            Level: {str(defence.level)}
+            Attacks: {str(defence.attacks)}
+            Defences: {str(defence.defences)}"""
+        else:
+            return "Player not found, check that the name is correct and that they are in the game"
+
 
 
 
@@ -216,10 +250,10 @@ class Player:
         self.t2 = threading.Timer(10, self.reset_cooldown)
         print("  Timers set")
 
-    #storing level as a property so it auto updated
+    #storing level as a property so it auto updated, usage same as a normal property
     @property
     def level(self):
-        return np.floor(1 + math.log((self.attackstat + self.defencestat),2)) #formula for level using log base 1.5 (Note:floor rounds down)
+        return np.floor(1 + math.log((self.attackstat + self.defencestat),2)) #formula for level using log base 2 (Note:floor rounds down)
 
     @property
     def snipesuccess(self):

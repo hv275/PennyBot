@@ -47,7 +47,7 @@ The Points system itself:
 
 
 TODO:
-	Gleb: player check and give pennies, scipy cdf, fix help menu
+	Gleb: fix help menu
 
 	Rory: hold glass
 

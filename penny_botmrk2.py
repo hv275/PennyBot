@@ -56,7 +56,7 @@ async def attack(ctx, victim):
 
 
 @bot.command(name = 'snipe', help = "Attempt to snipe a player. Format: 'penny snipe <name of victim>'")
-async def attack(ctx, victim):
+async def snipe(ctx, victim):
     #this is a highly retarded way to go about sending messages to channels but it will have to do
     guild = discord.utils.get(bot.guilds, name=GUILD)
     vchannels =  guild.voice_channels
@@ -79,6 +79,15 @@ async def getbalance(ctx):
 @bot.command(name = 'block', help = "Hold your glass for 30 secs")
 async def hold_glass(ctx):
     await ctx.send(sesh.block(ctx.author.display_name))
+
+@bot.command(name = 'check', help = "Check other player's stats")
+async def check(ctx,victim):
+    await ctx.send(sesh.check(ctx.author.display_name, victim))
+
+@bot.command(name = 'give', help = "Kindly donate some currency to another player")
+async def give(ctx, target, amount):
+    await ctx.send(sesh.give(ctx.author.display_name, target, amount))
+
 
 #cash injection that checks that the user has an admin role
 @bot.command(name = 'cashinjection', help = "dev only")
