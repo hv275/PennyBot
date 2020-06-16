@@ -36,7 +36,15 @@ async def leave(ctx):
 
 @bot.command(name = 'players', help = "Show all the players currently in game")
 async def players(ctx):
-    await ctx.send(sesh.playershow())
+    players = sesh.playershow()
+    players.sort(key=lambda x: x.purelevel, reverse=True)
+    await ctx.send("LEADERBOARD")
+    i=1
+    for player in players:
+        #pretty display of players but may be cumbersome in chat
+        await ctx.send(f"{i}. {player.name}, Attack:{str(player.attackstat)}, Defence:{str(player.defencestat)}, Level:{str(player.level)}")
+        i+=1
+    #await ctx.send(sesh.playershow()) for testing uncomment
 
 @bot.command(name = 'penny', help = "Attempt to penny a player. Format: 'penny attack <name of victim>'")
 async def attack(ctx, victim):
@@ -96,6 +104,14 @@ async def  cashinjection(ctx,name,num):
     await ctx.send(sesh.cashinjection(name,num))
 #please keep these two together
 #output in case of a check failure
+
+@bot.command(name='kick', help= "dev only", hidden = True)
+@commands.has_role('Developer')
+async def kick(ctx, name):
+    await ctx.send(sesh.remove_player(name))
+    await ctx.send("Removed by admin")
+
+
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.errors.CheckFailure):

@@ -175,7 +175,7 @@ class Session:
         playerlist = []
         scorelist = []
         for player in self.players:
-            playerlist.append(f"{player.name}: {player.attackstat + player.attackstat}")
+            playerlist.append(player)
         return(playerlist)
             
     def get_balance(self, playerName):
@@ -267,6 +267,12 @@ class Player:
     @property
     def level(self):
         return np.floor(1 + math.log((self.attackstat + self.defencestat),2)) #formula for level using log base 2 (Note:floor rounds down)
+
+    #used for score sorting purposes
+    @property
+    def purelevel(self):
+        return (1 + math.log((self.attackstat + self.defencestat),2))
+
 
     @property
     def snipesuccess(self):
