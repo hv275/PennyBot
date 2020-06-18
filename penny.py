@@ -227,18 +227,28 @@ class Session:
         #checks the player stats and prints them out
         offence = self.get_player(offenceName)
         defence = self.get_player(defenceName)
-        if offence != None and defence != None:
-            prob = self.probability(offence.attackstat - defence.defencestat)
+        if offence == None:
+            return f"{offenceName}, you haven't joined the game yet!"
+        elif defence == None:
+            return f"{defenceName} is not in the game yet."
+        else offence != None and defence != None:
+            print(f"""
+            Here is information on the target
+            Name:        {defence.name}
+            Attackstat:  {defence.attackstat:.2f}
+            Defencestat: {defence.defencestat:.2f}
+            Level:       {defence.level:.0f}
+            Attacks:     {defence.attacks}
+            Defences:    {defence.defences}""")
+
             return f"""
             Here is information on the target
-            Name: {defence.name}
-            Attackstat: {str(self.attackstat)}
-            Defencestat: {str(self.defencestat)}
-            Level: {str(defence.level)}
-            Attacks: {str(defence.attacks)}
-            Defences: {str(defence.defences)}"""
-        else:
-            return "Player not found, check that the name is correct and that they are in the game"
+            Name:        {defence.name}
+            Attackstat:  {defence.attackstat:.2f}
+            Defencestat: {defence.defencestat:.2f}
+            Level:       {defence.level:.0f}
+            Attacks:     {defence.attacks}
+            Defences:    {defence.defences}"""
 
 
 

@@ -42,7 +42,9 @@ async def players(ctx):
     i=1
     for player in players:
         #pretty display of players but may be cumbersome in chat
-        await ctx.send(f"{i}. {player.name}, Attack:{str(player.attackstat)}, Defence:{str(player.defencestat)}, Level:{str(player.level)}")
+        await ctx.send(f"{i}. {player.name:10s}, Attack: {player.attackstat:1.2f}, "
+                       f"Defence: {player.defencestat:1.2f}, "
+                       f"Level: {player.level:1.0f}")
         i+=1
     #await ctx.send(sesh.playershow()) for testing uncomment
 
