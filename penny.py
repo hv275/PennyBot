@@ -11,35 +11,42 @@ class Session:
     def penny(self, offenceName, defenceName, vchannels):
         """ A pennying event
         
-        offence player is attacking the defence player"""
+        offence player is attacking the defence player
+        """
         offence = self.get_player(offenceName)
         defence = self.get_player(defenceName)
-
+        print(f"Penny event: {offenceName} ==> {defenceName}")
         if self.same_channel_check(offenceName, defenceName, vchannels):
         
             # check offence is registered in the game
             if offence not in self.players:
                 print("Player not registered - please sign in "
-                      "before trying to penny someone.")
-                return "Player not registered"
+                      "before trying to penny someone.\n")
+                return ("Player not registered - please sign in "
+                        "before trying to penny someone.")
+
             # check defence is registered in the game
             elif defence not in self.players:
                 print("Player not registered - make sure your "
+                      "target has signed in.\n")
+                return ("Player not registered - make sure your "
                       "target has signed in.")
-                return "Player not registered"
 
             # check offence has a penny
             elif offence.pennys <= 0:
                 print("Insufficient funds! Go find some pennies "
                       "before you come back!")
-                return "Insufficient funds! Go find some pennies before you come back!"
+                return ("Insufficient funds! Go find some pennies "
+                      "before you come back!")
+
             elif offence.p_cooldown is True:
-                print("Hold on a bit! You're going too quick!")
+                print("Hold on a bit! You're going too quick!\n")
                 return "Hold on a bit! You're going too quick!"
 
             else:
                 offence.blocking = False
                 prob = self.probability((offence.attackstat - defence.defencestat))
+                print(f"Probability of success: {prob:.4f}")
                 if random.random() < (1-prob): #all of our probabilities were the wrong way round
                     # Attempt failed
                     offence.p_wait()
@@ -49,7 +56,7 @@ class Session:
                     defence.defencestat += prob
                     print(offence)
                     print(defence)
-                    print(f"{offence.name} tried to penny {defence.name}, but missed.")
+                    print(f"{offence.name} tried to penny {defence.name}, but missed.\n")
                     return f"{offence.name} tried to penny {defence.name}, but missed."
                 else:
                     # Attempt succeeded
@@ -59,20 +66,26 @@ class Session:
                     if defence.blocking is True:
                         offence.p_wait()
                         defence.defencestat += 1.5*prob
-                        print(f"{offence.name} tried to penny {defence.name}, but {defence.name}"
-                              f" was holding their glass!")
-                        return (f"{offence.name} tried to penny {defence.name}, but {defence.name}"
-                              f" was holding their glass!")
+                        print(f"{offence.name} tried to penny
+                              f"{defence.name}, but {defence.name}"
+                              f" was holding their glass!\n")
+                        return (f"{offence.name} tried to penny "
+                                f"{defence.name}, but {defence.name}"
+                                f" was holding their glass!")
                     else:
                         offence.attackstat += 1.0-prob
                         defence.defencestat += prob/3.0 
                         print(offence)
                         print(defence)
-                        print(f"{offence.name} pennied {defence.name}!")
+                        print(f"{offence.name} pennied {defence.name}\n!")
                         return f"{offence.name} pennied {defence.name}!"
         else:
-            print(f"{offence.name} tried to penny {defence.name}, but target is sat too far. You have to be sat the the same table")
-            return f"{offence.name} tried to penny {defence.name}, but target is sat too far. You have to be sat the the same table"
+            print(f"{offence.name} tried to penny {defence.name}, "
+                  f"but target is sat too far. You have to be sat "
+                  f"the the same table.\n")
+            return (f"{offence.name} tried to penny {defence.name}, "
+                  f"but target is sat too far. You have to be sat "
+                  f"the the same table.")
 
 
     def snipe(self, offenceName, defenceName, vchannels):
@@ -81,43 +94,47 @@ class Session:
         offence player is attacking the defence player"""
         offence = self.get_player(offenceName)
         defence = self.get_player(defenceName)
+        print(f"Snipe event: {offenceName} ==> {defenceName}")
 
         if self.same_channel_check(offenceName, defenceName, vchannels):
         
             # check offence is registered in the game
             if offence not in self.players:
                 print("Player not registered - please sign in "
-                      "before trying to penny someone.")
-                return "Player not registered"
+                      "before trying to penny someone.\n")
+                return ("Player not registered - please sign in "
+                        "before trying to penny someone.")
             # check defence is registered in the game
             elif defence not in self.players:
                 print("Player not registered - make sure your "
-                      "target has signed in.")
-                return "Player not registered"
+                      "target has signed in.\n")
+                return ("Player not registered - make sure your "
+                        "target has signed in.")
 
             # check offence has a penny
             elif offence.pennys <= 0:
                 print("Insufficient funds! Go find some pennies "
-                      "before you come back!")
+                      "before you come back!\n")
                 return "Insufficient funds! Go find some pennies before you come back!"
             elif offence.level < 3:
-                print("Level not high enough. Available from level 3 and above")
-                return "Level not high enough. Available from level 3 and above"
+                print("Level not high enough. Available from level 3 and above.\n")
+                return "Level not high enough. Available from level 3 and above."
             elif offence.p_cooldown is True:
-                print("Hold on a bit! You're going too quick!")
+                print("Hold on a bit! You're going too quick!\n")
                 return "Hold on a bit! You're going too quick!"
             else:
                 offence.blocking = False
+                print(f"Probability of succes: {offence.snipesuccess}")
                 if random.random() > offence.snipesuccess:
                     offence.p_wait()
                     # Attempt failed
                     print(f"{offence.name} tried to snipe {defence.name}, "
-                          f"but missed.")
+                          f"but missed.\n")
                     offence.pennys -= 1
                     defence.pennys += 1
                     defence.defences += 1
-                    print(offence)
-                    print(defence)
+                    #print(offence)
+                    #print(defence)
                     return f"{offence.name} tried to snipe {defence.name}, but missed."
                 else:
                     # Attempt succeeded
@@ -125,13 +142,17 @@ class Session:
                     offence.attacks += 1
                     defence.pennys += 1
                     offence.attackstat += 3*(1.0-offence.snipesuccess)
-                    print(offence)
-                    print(defence)
-                    print(f"{offence.name} sniped {defence.name}!")
+                    #print(offence)
+                    #print(defence)
+                    print(f"{offence.name} sniped {defence.name}!\n")
                     return f"{offence.name} sniped {defence.name}!"
         else:
-            print(f"{offence.name} tried to snipe {defence.name}, but target is sat too far. You have to be sat the the same table")
-            return f"{offence.name} tried to snipe {defence.name}, but target is sat too far. You have to be sat the the same table"
+            print(f"{offence.name} tried to snipe {defence.name}, "
+                  f"but target is sat too far. You have to be sat "
+                  f"the the same table\n")
+            return f"{offence.name} tried to snipe {defence.name}, "
+                  f"but target is sat too far. You have to be sat "
+                  f"the the same table")
 
 
     def block(self, playerName):
@@ -145,19 +166,19 @@ class Session:
         for player in self.players:
             print(f"Debug: {name} checked against {player.name}")
             if name == player.name:
-                print("You're already in the game!")
+                print("You're already in the game!\n")
                 return "You're already in the game!"
         self.players.append(Player(name))
-        print(f"{name} has joined the game!")
+        print(f"{name} has joined the game!\n")
         return f"{name} has joined the game!"
 
     def remove_player(self, name):
         for player in self.players:
             if name == player.name:
                 self.players.remove(player)
-                print(f"{name} has been removed")
+                print(f"{name} has been removed\n")
                 return f"{name} has been removed"
-        print(f"{name} could not be found")
+        print(f"{name} could not be found\n")
         return f"{name} could not be found"
 
     def get_player(self, playerName):
@@ -216,7 +237,7 @@ class Session:
         return False
 
     def probability(self, x):
-        #adjuct constansts for scaling, current set up seems reasonable
+        #adjust constansts for scaling, current set up seems reasonable
         #b is probabolity for when attack and defense are eqaul
         #a affects how quickly the probability grows with disparity
         b=0.55
@@ -239,7 +260,7 @@ class Session:
             Defencestat: {defence.defencestat:.2f}
             Level:       {defence.level:.0f}
             Attacks:     {defence.attacks}
-            Defences:    {defence.defences}""")
+            Defences:    {defence.defences}\n""")
 
             return f"""
             Here is information on the target
@@ -293,13 +314,14 @@ class Player:
 
 
     def block(self):
-        print(" Player.block() called")
+        print(f"Player.block() called by {self.name}")
         if self.on_cooldown is True:
+            print("  That ability is on cooldown - you'll need to wait"
             return "That ability is on cooldown - you'll need to wait"
         else:
             self.on_cooldown = True
             self.blocking = True
-            print("Starting timers")
+            print("  Starting timers")
             print(f"  Block_pre = {self.blocking}")
             self.t1.start()
             print("  t1 started")
@@ -315,17 +337,17 @@ class Player:
 
     def reset_penny(self):
         self.p_cooldown = False
-        print(f"P_post = {self.p_cooldown}")
+        print(f"        {self.name} Penny Cooldown done")
         self.t3 = threading.Timer(10, self.reset_penny)
 
     def reset_block(self):
         self.blocking = False
-        print(f"Blocking_post = {self.blocking}")
+        print(f"        {self.name}: blocking done")
         self.t1 = threading.Timer(30, self.reset_block)
 
     def reset_cooldown(self):
         self.on_cooldown = False
-        print(f"Cooldown_post = {self.on_cooldown}")
+        print(f"        {self.name}: block cooldown done")
         self.t2 = threading.Timer(120, self.reset_cooldown)
 
     #for easier printing of function
