@@ -6,8 +6,9 @@ import math
 
 class Session:
     """ Represents a round of pennying"""
-    def __init__(self):
+    def __init__(self,GUILD):
         self.players = []
+        self.GUILD = GUILD
     def penny(self, offenceName, defenceName, vchannels):
         """ A pennying event
         
@@ -66,7 +67,7 @@ class Session:
                     if defence.blocking is True:
                         offence.p_wait()
                         defence.defencestat += 1.5*prob
-                        print(f"{offence.name} tried to penny
+                        print(f"{offence.name} tried to penny"
                               f"{defence.name}, but {defence.name}"
                               f" was holding their glass!\n")
                         return (f"{offence.name} tried to penny "
@@ -150,7 +151,7 @@ class Session:
             print(f"{offence.name} tried to snipe {defence.name}, "
                   f"but target is sat too far. You have to be sat "
                   f"the the same table\n")
-            return f"{offence.name} tried to snipe {defence.name}, "
+            return (f"{offence.name} tried to snipe {defence.name}, "
                   f"but target is sat too far. You have to be sat "
                   f"the the same table")
 
@@ -252,7 +253,7 @@ class Session:
             return f"{offenceName}, you haven't joined the game yet!"
         elif defence == None:
             return f"{defenceName} is not in the game yet."
-        else offence != None and defence != None:
+        elif offence != None and defence != None:
             print(f"""
             Here is information on the target
             Name:        {defence.name}
@@ -316,7 +317,7 @@ class Player:
     def block(self):
         print(f"Player.block() called by {self.name}")
         if self.on_cooldown is True:
-            print("  That ability is on cooldown - you'll need to wait"
+            print("  That ability is on cooldown - you'll need to wait")
             return "That ability is on cooldown - you'll need to wait"
         else:
             self.on_cooldown = True
